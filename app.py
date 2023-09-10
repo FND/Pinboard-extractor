@@ -13,6 +13,15 @@ TOKEN = os.environ["PINBOARD_API_TOKEN"]
 
 
 def app(environ, start_response):
+    uri = environ.get("PATH_INFO", "")
+    if uri == "/health":
+        start_response("200 OK", [("Content-Type", "text/plain")])
+        return []
+
+    if uri != "/":
+        start_response("404 Not Found", [("Content-Type", "text/plain")])
+        return []
+
     bookmarks = retrieve(TAG, COUNT)
     start_response("200 OK", [("Content-Type", "text/html")])
     for html in render(bookmarks):
